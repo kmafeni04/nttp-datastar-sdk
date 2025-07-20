@@ -4,7 +4,7 @@ A [datastar](https://data-star.dev) sdk for [http-nelua](https://github.com/kmaf
 
 ## How to install
 
-Add to your nlpm package dependencies
+Add to your [nlpm](https://github.com/kmafeni04/nlpm) package dependencies
 ```lua
 {
   name = "http-nelua-datastar-sdk",
