@@ -1,0 +1,61 @@
+local ssdg = require "ssdg"
+
+local gen = ssdg.new{
+  lang = "lua",
+  lead = "-",
+  single_line = "--",
+  multi_line = {
+    starting = "--[[",
+    ending = "]]"
+  }
+}
+
+local subs: hashmap(string, string)
+subs["lang"] = gen.conf.lang
+
+gen:add([=[# http-nelua-datastar-sdk
+
+A [datastar](https://data-star.dev) sdk for [http-nelua](https://github.com/kmafeni04/http-nelua)
+
+## How to install
+
+Add to your nlpm package dependencies
+```:lang:
+{
+  name = "http-nelua-datastar-sdk",
+  repo = "https://github.com/kmafeni04/http-nelua-datastar-sdk",
+  version = "COMMIT-HASH-OR-TAG",
+},
+```
+
+## Quick start
+
+```:lang:
+local http = require "http"
+local datastar = require "datastar"
+
+local app = http.Server.new()
+
+app:get(nil, "/", function(self: *http.Server): http.Response
+  local sseg, err = datastar.ServerSentEventGenerator.new(self)
+  if err ~= "" then return self:error() end
+
+  local err = sseg:patch_elements('<div id="hello">Patching element</div>')
+  if err ~= "" then return self:error() end
+  
+  local err = sseg:patch_signals('{foo: 1}')
+  if err ~= "" then return self:error() end
+
+  return sseg.resp
+end)
+
+app:serve()
+```
+
+## Reference
+
+]=], {subs = subs})
+
+gen:add_file("./datastar.nelua", { subs = subs })
+
+gen:write_file("README.md")

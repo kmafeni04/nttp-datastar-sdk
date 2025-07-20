@@ -21,15 +21,14 @@ app:get("index", "/", function(self: *http.Server)
 end)
 
 app:get("stream", "/stream", function(self: *http.Server): http.Response
-  local err_resp: http.Response = { status = 500 }
   local sseg, err = datastar.ServerSentEventGenerator.new(self)
-  if err ~= "" then return err_resp end
+  if err ~= "" then return self:error() end
 
-  local err = sseg:patch_elements('<div id="hello">Open your console</div>', { retry_duration = 4000 })
-  if err ~= "" then return err_resp end
+  local err = sseg:patch_elements('<div id="hello">Open your console</div>')
+  if err ~= "" then return self:error() end
   
   local err = sseg:patch_signals('{foo: 1}')
-  if err ~= "" then return err_resp end
+  if err ~= "" then return self:error() end
   
   sseg:execute_script("console.log('Going to home')", { auto_remove = true })
   for i = 10, 1, -1 do

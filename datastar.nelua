@@ -1,12 +1,17 @@
 local http = require "http"
-local json = http.json
 
+---### datastar
+---`
 local datastar = @record{}
+---`
 
+---### datastar.ServerSentEventGenerator
+---`
 local datastar.ServerSentEventGenerator = @record{
   server: *http.Server,
   resp: http.Response
 }
+---`
 
 local function send_session(self: *http.Server, resp: *http.Response)
   if self.session.send then
@@ -25,7 +30,10 @@ local function send_session(self: *http.Server, resp: *http.Response)
   end
 end
 
+---### datastar.ServerSentEventGenerator.new
+---`
 function datastar.ServerSentEventGenerator.new(server: *http.Server, resp: http.Response): (datastar.ServerSentEventGenerator, string) 
+---`
   if server == nilptr then
     return  {}, "Server was a nilptr"
   end
@@ -106,6 +114,8 @@ local function send(
   return ""
 end
 
+---### datastar.ElementPatchMode
+---`
 local datastar.ElementPatchMode = @enum{
   null = -1,
   Inner,
@@ -117,6 +127,7 @@ local datastar.ElementPatchMode = @enum{
   After,
   Remove,
 }
+---`
 
 local function element_patch_mode_text(epm: datastar.ElementPatchMode): string
   switch epm do
@@ -140,18 +151,24 @@ local function element_patch_mode_text(epm: datastar.ElementPatchMode): string
   return "UNKNOWN ElementPatchMode: " .. epm
 end
 
-local PatchElementsOpts = @record{
+---### datastar.PatchElementsOpts
+---`
+local datastar.PatchElementsOpts = @record{
   selector: string,
   mode: datastar.ElementPatchMode,
   use_view_transition: boolean,
   event_id: string,
   retry_duration: uinteger
 }
+---`
 
+---### datastar.ServerSentEventGenerator:patch_elements
+---`
 function datastar.ServerSentEventGenerator:patch_elements(
   elements: string,
-  opts: facultative(PatchElementsOpts)
+  opts: facultative(datastar.PatchElementsOpts)
 ): string
+---`
   local data: sequence(string)
   ## if not opts.type.is_niltype then
     local send_opts: SendOpts = {
@@ -177,15 +194,23 @@ function datastar.ServerSentEventGenerator:patch_elements(
   return send(self, EventType.PatchElements, data, send_opts)
 end
 
+---### datastar.RemoveElementsOpts
+---`
+local datastar.RemoveElementsOpts = @record{
+  use_view_transition: boolean,
+  event_id: string,
+  retry_duration: uinteger
+}
+---`
+
+---### datastar.ServerSentEventGenerator:remove_elements
+---`
 function datastar.ServerSentEventGenerator:remove_elements(
   selector: string,
-  opts: facultative(record{
-    use_view_transition: boolean,
-    event_id: string,
-    retry_duration: uinteger
-  })
+  opts: facultative(datastar.RemoveElementsOpts)
 ): string
-  local patch_el_opts: PatchElementsOpts = {
+---`
+  local patch_el_opts: datastar.PatchElementsOpts = {
     selector = selector,
     mode = datastar.ElementPatchMode.Remove
   }
@@ -198,14 +223,22 @@ function datastar.ServerSentEventGenerator:remove_elements(
   return self:patch_elements("", patch_el_opts)
 end
 
+---### datastar.PatchSignalsOpts
+---`
+local datastar.PatchSignalsOpts = @record{
+  only_if_missing: boolean,
+  event_id: string,
+  retry_duration: uinteger
+}
+---`
+
+---### datastar.ServerSentEventGenerator:patch_signals
+---`
 function datastar.ServerSentEventGenerator:patch_signals(
   signals: string,
-  opts: facultative(record{
-    only_if_missing: boolean,
-    event_id: string,
-    retry_duration: uinteger
-  })
+  opts: facultative(datastar.PatchSignalsOpts)
 ): string
+---`
   local data: sequence(string)
 
   ## if not opts.type.is_niltype then
@@ -225,19 +258,27 @@ function datastar.ServerSentEventGenerator:patch_signals(
   return send(self, EventType.PatchSignals, data, send_opts)
 end
 
+---### datastar.ExecuteScriptOpts
+---`
+local datastar.ExecuteScriptOpts = @record{
+  auto_remove: boolean,
+  attributes: sequence(string),
+  event_id: string,
+  retry_duration: uinteger
+}
+---`
+
+---### datastar.ServerSentEventGenerator:execute_script
+---`
 function datastar.ServerSentEventGenerator:execute_script(
   script: string,
-  opts: facultative(record{
-    auto_remove: boolean,
-    attributes: sequence(string),
-    event_id: string,
-    retry_duration: uinteger
-  })
+  opts: facultative(datastar.ExecuteScriptOpts)
 ): string
+---`
 
   local sb: stringbuilder
   sb:write("<script")
-  local patch_el_opts: PatchElementsOpts = {
+  local patch_el_opts: datastar.PatchElementsOpts = {
     selector = "body",
     mode = datastar.ElementPatchMode.Append
   }
@@ -256,16 +297,22 @@ function datastar.ServerSentEventGenerator:execute_script(
   return self:patch_elements(elements, patch_el_opts)
 end
 
+---### datastar.ServerSentEventGenerator:redirect
+---`
 function datastar.ServerSentEventGenerator:redirect(path: string)
+---`
   self:execute_script(('setTimeout(() => window.location = "%s")'):format(path), { auto_remove = true })
 end
 
-function datastar.read_signals(server: *http.Server): (json.JsonNode, string)
+---### datastar.read_signals
+---`
+function datastar.read_signals(server: *http.Server): (http.json.JsonNode, string)
+---`
   if server.req.method == "GET" then
     local signals = server.req.params["datastar"]
-    return json.parse_string(signals)
+    return http.json.parse_string(signals)
   else
-    return json.parse_string(server.req.body)
+    return http.json.parse_string(server.req.body)
   end
 end
 

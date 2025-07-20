@@ -13,10 +13,16 @@ return {
     {
       name = "http-nelua",
       repo = "https://github.com/kmafeni04/http-nelua",
-      version = "#ffc3dee2769547ec5d12e711cafaedb2978e6985",
+      version = "#de87bf9fbd5218e79925b45292575cc892a92a75",
+    },
+    {
+      name = "ssdg",
+      repo = "https://github.com/kmafeni04/ssdg",
+      version = "#9e1fb58f183ae7efea98d25a40d6d1bf38f483af",
     },
   },
   scripts = {
     example_basic = "nelua example/basic/app.nelua",
+    docs = "nelua datastar-doc.nelua",
   },
 }
