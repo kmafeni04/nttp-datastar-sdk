@@ -13,7 +13,7 @@ return {
     {
       name = "http-nelua",
       repo = "https://github.com/kmafeni04/http-nelua",
-      version = "#de87bf9fbd5218e79925b45292575cc892a92a75",
+      version = "#e0351a7d74ee85fbbf1403777241df8d69d74090",
     },
     {
       name = "ssdg",

@@ -55,7 +55,7 @@ function datastar.ServerSentEventGenerator.new(server: *http.Server, resp: http.
     return {}, err
   end
 
-  local written, err = server:write(resp:tostring())
+  local err = server:write(resp:tostring())
   if err ~= "" then
     return {}, err
   end
@@ -106,11 +106,12 @@ local function send(
   sb:write("\n")
 
   local final = sb:promote()
-  local written, err = self.server:write(final)
+  local err = self.server:write(final)
+  self.server.written = err == ""
   if err ~= "" then
     return err
   end
-  self.server.written = written
+
   return ""
 end
 
