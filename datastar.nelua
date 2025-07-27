@@ -1,4 +1,4 @@
-local http = require "http"
+local nttp = require "nttp"
 
 ---### datastar
 ---`
@@ -8,20 +8,20 @@ local datastar = @record{}
 ---### datastar.ServerSentEventGenerator
 ---`
 local datastar.ServerSentEventGenerator = @record{
-  server: *http.Server,
-  resp: http.Response
+  server: *nttp.Server,
+  resp: nttp.Response
 }
 ---`
 
-local function send_session(self: *http.Server, resp: *http.Response)
+local function send_session(self: *nttp.Server, resp: *nttp.Response)
   if self.session.send then
     local sb: stringbuilder
     for k, v in pairs(self.session.vals) do
       sb:write(("%s=%s; "):format(k, v))
     end
     sb:rollback(1)
-    local session_map = http.utils.b64_encode(sb:promote()) 
-    local val = session_map .. "///" .. http.utils.b64_encode(http.utils.sign(self.config.secret, session_map)) 
+    local session_map = nttp.utils.b64_encode(sb:promote()) 
+    local val = session_map .. "///" .. nttp.utils.b64_encode(nttp.utils.sign(self.config.secret, session_map)) 
     resp:set_cookie({
       name = self.config.session_name,
       val = val
@@ -32,7 +32,7 @@ end
 
 ---### datastar.ServerSentEventGenerator.new
 ---`
-function datastar.ServerSentEventGenerator.new(server: *http.Server, resp: http.Response): (datastar.ServerSentEventGenerator, string) 
+function datastar.ServerSentEventGenerator.new(server: *nttp.Server, resp: nttp.Response): (datastar.ServerSentEventGenerator, string) 
 ---`
   if server == nilptr then
     return  {}, "Server was a nilptr"
@@ -307,13 +307,13 @@ end
 
 ---### datastar.read_signals
 ---`
-function datastar.read_signals(server: *http.Server): (http.json.JsonNode, string)
+function datastar.read_signals(server: *nttp.Server): (nttp.json.JsonNode, string)
 ---`
   if server.req.method == "GET" then
     local signals = server.req.params["datastar"]
-    return http.json.parse_string(signals)
+    return nttp.json.parse_string(signals)
   else
-    return http.json.parse_string(server.req.body)
+    return nttp.json.parse_string(server.req.body)
   end
 end
 

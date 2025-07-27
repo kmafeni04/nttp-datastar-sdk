@@ -1,9 +1,9 @@
-local http = require "http"
+local nttp = require "nttp"
 local datastar = require "...datastar"
 
-local app = http.Server.new()
+local app = nttp.Server.new()
 
-app:get("index", "/", function(self: *http.Server)
+app:get("index", "/", function(self: *nttp.Server)
   return self:html(200,
   [[<!DOCTYPE html>
 <html lang="en">
@@ -20,7 +20,7 @@ app:get("index", "/", function(self: *http.Server)
 </html>]])
 end)
 
-app:get("stream", "/stream", function(self: *http.Server): http.Response
+app:get("stream", "/stream", function(self: *nttp.Server): nttp.Response
   local sseg, err = datastar.ServerSentEventGenerator.new(self)
   if err ~= "" then return self:error() end
 
@@ -39,8 +39,8 @@ app:get("stream", "/stream", function(self: *http.Server): http.Response
   return sseg.resp
 end)
 
-app:post("stream-post", "/stream-post", function(self: *http.Server): http.Response
-  local err_resp: http.Response = { status = 500 }
+app:post("stream-post", "/stream-post", function(self: *nttp.Server): nttp.Response
+  local err_resp: nttp.Response = { status = 500 }
   local sseg, err = datastar.ServerSentEventGenerator.new(self)
   if err ~= "" then return err_resp end
   for i = 10, 1, -1 do
@@ -52,7 +52,7 @@ app:post("stream-post", "/stream-post", function(self: *http.Server): http.Respo
   return sseg.resp
 end)
 
-app:get("home", "/home", function(self: *http.Server)
+app:get("home", "/home", function(self: *nttp.Server)
   return self:html(200,
   [[<!DOCTYPE html>
 <html lang="en">
@@ -68,8 +68,8 @@ app:get("home", "/home", function(self: *http.Server)
 </html>]])
 end)
 
-app:get("home-stream", "/home-stream", function(self: *http.Server)
-  local err_resp: http.Response = { status = 500 }
+app:get("home-stream", "/home-stream", function(self: *nttp.Server)
+  local err_resp: nttp.Response = { status = 500 }
   local sseg, err = datastar.ServerSentEventGenerator.new(self)
   if err ~= "" then return err_resp end
   local err = sseg:patch_elements('<h1 id="hello">Going back to / </h1>')

@@ -11,9 +11,9 @@
 return {
   dependencies = {
     {
-      name = "http-nelua",
-      repo = "https://github.com/kmafeni04/http-nelua",
-      version = "#e0351a7d74ee85fbbf1403777241df8d69d74090",
+      name = "nttp",
+      repo = "https://github.com/kmafeni04/nttp",
+      version = "#d8406960aca9b3ca683c5993e0b12d604f644baa",
     },
     {
       name = "ssdg",
