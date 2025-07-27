@@ -1,4 +1,4 @@
-# http-nelua-datastar-sdk
+# nttp-datastar-sdk
 
 A [datastar](https://data-star.dev) sdk for [http-nelua](https://github.com/kmafeni04/http-nelua)
 
@@ -7,8 +7,8 @@ A [datastar](https://data-star.dev) sdk for [http-nelua](https://github.com/kmaf
 Add to your [nlpm](https://github.com/kmafeni04/nlpm) package dependencies
 ```lua
 {
-  name = "http-nelua-datastar-sdk",
-  repo = "https://github.com/kmafeni04/http-nelua-datastar-sdk",
+  name = "nttp-datastar-sdk",
+  repo = "https://github.com/kmafeni04/nttp-datastar-sdk",
   version = "COMMIT-HASH-OR-TAG",
 },
 ```
@@ -16,12 +16,12 @@ Add to your [nlpm](https://github.com/kmafeni04/nlpm) package dependencies
 ## Quick start
 
 ```lua
-local http = require "http"
+local nttp = require "nttp"
 local datastar = require "datastar"
 
-local app = http.Server.new()
+local app = nttp.Server.new()
 
-app:get(nil, "/", function(self: *http.Server): http.Response
+app:get(nil, "/", function(self: *nttp.Server): nttp.Response
   local sseg, err = datastar.ServerSentEventGenerator.new(self)
   if err ~= "" then return self:error() end
 
@@ -49,15 +49,15 @@ local datastar = @record{}
 
 ```lua
 local datastar.ServerSentEventGenerator = @record{
-  server: *http.Server,
-  resp: http.Response
+  server: *nttp.Server,
+  resp: nttp.Response
 }
 ```
 
 ### datastar.ServerSentEventGenerator.new
 
 ```lua
-function datastar.ServerSentEventGenerator.new(server: *http.Server, resp: http.Response): (datastar.ServerSentEventGenerator, string) 
+function datastar.ServerSentEventGenerator.new(server: *nttp.Server, resp: nttp.Response): (datastar.ServerSentEventGenerator, string) 
 ```
 
 ### datastar.ElementPatchMode
@@ -164,6 +164,6 @@ function datastar.ServerSentEventGenerator:redirect(path: string)
 ### datastar.read_signals
 
 ```lua
-function datastar.read_signals(server: *http.Server): (http.json.JsonNode, string)
+function datastar.read_signals(server: *nttp.Server): (nttp.json.JsonNode, string)
 ```
 
