@@ -1,4 +1,4 @@
-local nttp = require "nttp"
+local nttp = require "nttp.nttp"
 local datastar = require "...datastar"
 
 local app = nttp.Server.new()
@@ -26,10 +26,10 @@ app:get("stream", "/stream", function(self: *nttp.Server): nttp.Response
 
   local err = sseg:patch_elements('<div id="hello">Open your console</div>')
   if err ~= "" then return self:error() end
-  
+
   local err = sseg:patch_signals('{foo: 1}')
   if err ~= "" then return self:error() end
-  
+
   sseg:execute_script("console.log('Going to home')", { auto_remove = true })
   for i = 10, 1, -1 do
     sseg:execute_script(("console.log('Going in %d')"):format(i), { auto_remove = true })

@@ -1,4 +1,4 @@
-local ssdg = require "ssdg"
+local ssdg = require "ssdg.ssdg"
 
 local gen = ssdg.new{
   lang = "lua",
@@ -42,7 +42,7 @@ app:get(nil, "/", function(self: *nttp.Server): nttp.Response
 
   local err = sseg:patch_elements('<div id="hello">Patching element</div>')
   if err ~= "" then return self:error() end
-  
+
   local err = sseg:patch_signals('{foo: 1}')
   if err ~= "" then return self:error() end
 

@@ -1,4 +1,4 @@
-local nttp = require "nttp"
+local nttp = require "nttp.nttp"
 
 ---### datastar
 ---`
@@ -20,8 +20,8 @@ local function send_session(self: *nttp.Server, resp: *nttp.Response)
       sb:write(("%s=%s; "):format(k, v))
     end
     sb:rollback(1)
-    local session_map = nttp.utils.b64_encode(sb:promote()) 
-    local val = session_map .. "///" .. nttp.utils.b64_encode(nttp.utils.sign(self.config.secret, session_map)) 
+    local session_map = nttp.utils.b64_encode(sb:promote())
+    local val = session_map .. "///" .. nttp.utils.b64_encode(nttp.utils.sign(self.config.secret, session_map))
     resp:set_cookie({
       name = self.config.session_name,
       val = val
@@ -32,7 +32,7 @@ end
 
 ---### datastar.ServerSentEventGenerator.new
 ---`
-function datastar.ServerSentEventGenerator.new(server: *nttp.Server, resp: nttp.Response): (datastar.ServerSentEventGenerator, string) 
+function datastar.ServerSentEventGenerator.new(server: *nttp.Server, resp: nttp.Response): (datastar.ServerSentEventGenerator, string)
 ---`
   if server == nilptr then
     return  {}, "Server was a nilptr"
