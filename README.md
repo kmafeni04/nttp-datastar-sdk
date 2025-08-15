@@ -27,7 +27,7 @@ app:get(nil, "/", function(self: *nttp.Server): nttp.Response
 
   local err = sseg:patch_elements('<div id="hello">Patching element</div>')
   if err ~= "" then return self:error() end
-  
+
   local err = sseg:patch_signals('{foo: 1}')
   if err ~= "" then return self:error() end
 
@@ -57,7 +57,7 @@ local datastar.ServerSentEventGenerator = @record{
 ### datastar.ServerSentEventGenerator.new
 
 ```lua
-function datastar.ServerSentEventGenerator.new(server: *nttp.Server, resp: nttp.Response): (datastar.ServerSentEventGenerator, string) 
+function datastar.ServerSentEventGenerator.new(server: *nttp.Server, resp: nttp.Response): (datastar.ServerSentEventGenerator, string)
 ```
 
 ### datastar.ElementPatchMode
@@ -165,5 +165,11 @@ function datastar.ServerSentEventGenerator:redirect(path: string)
 
 ```lua
 function datastar.read_signals(server: *nttp.Server): (nttp.json.JsonNode, string)
+```
+
+### datastar.csrf
+
+```lua
+function datastar.csrf(server: *nttp.Server): Option(nttp.Response)
 ```
 

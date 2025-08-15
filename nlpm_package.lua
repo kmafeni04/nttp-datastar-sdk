@@ -13,7 +13,7 @@ return {
     {
       name = "nttp",
       repo = "https://github.com/kmafeni04/nttp",
-      version = "#969e07e4ad30483d3f7c823eac14475a8a41fa3e",
+      version = "#6689f7f8ac39d263b6e99c089e2a9863dd11b2cc",
     },
     {
       name = "ssdg",

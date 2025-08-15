@@ -1,4 +1,5 @@
 local nttp = require "nttp.nttp"
+local Option = nttp.variant.Option
 
 ---### datastar
 ---`
@@ -315,6 +316,27 @@ function datastar.read_signals(server: *nttp.Server): (nttp.json.JsonNode, strin
   else
     return nttp.json.parse_string(server.req.body)
   end
+end
+
+---### datastar.csrf
+---`
+function datastar.csrf(server: *nttp.Server): Option(nttp.Response)
+---`
+  local signals, err = datastar.read_signals(server)
+  if err ~= "" then
+    io.stderr:write(err .. "\n")
+    return Option.Some(server:error())
+  end
+  local obj = signals:get_obj()
+  if not obj:has("csrf_token") then
+    io.stderr:write("No csrf_token\n")
+    return Option.Some(server:error())
+  end
+  local csrf_token = obj["csrf_token"]:get_str()
+  if csrf_token ~= server.session:get_val("csrf_token") then
+    return Option.Some(server:text(nttp.Status.Forbidden, "forbidden"))
+  end
+  return Option.None()
 end
 
 return datastar
